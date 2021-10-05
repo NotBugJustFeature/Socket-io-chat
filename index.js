@@ -1,35 +1,3 @@
-/*const express   = require("express")
-const path      = require("path")
-
-var app = express()
-  , server = require('http').createServer(app)
-  , io = require('socket.io').listen(server)
-
-app.get("/", (req, res) => {
-    res.sendFile( path.join(__dirname, "public/index.html"))
-})
-app.listen(8080)
-app.use(express.static(__dirname + "/public"))
-
-io.on("connection", (socket) => {
-    console.log("csatlakozott")
-    socket.on("disconnet", (s) => {
-        console.log("lecsatlakozott")
-    })
-})*/
-/*
-const server = require('http').createServer();
-const io = require('socket.io')(server);
-io.on('connection', client => {
-    console.log("asd")
-    client.on('event', data => {  });
-    client.on('disconnect', () => {  });
-});
-server.listen(8080);
-*/
-
-const { createWebSocketStream } = require("ws");
-
 const   client      =   require("engine.io-client"),
         express     =   require("express"),
         app         =   express(),
@@ -44,16 +12,10 @@ const   client      =   require("engine.io-client"),
 clients = []
 count = 0;
 
-debug = true
-
-VideoStatus = false;
-VideoTime   = 5;
-
 io.on("connection", (socket) => {
     socket2 = socket
 
     clients[count] = socket.id
-    if(debug)console.log(count+1 + ". client connected " + clients[count] )
     count++;
 
     socket.on("disconnect", () => {
