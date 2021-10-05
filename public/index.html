@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Document</title>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			socket = io("http://"+window.location.hostname+":3000")
+			document.addEventListener("DOMContentLoaded", () => {
+				console.log("betoltott")
+				inputSend.addEventListener("click", ()=>{
+						sendMessage()
+				}) 
+				inputIn.addEventListener("keyup", (e) => {
+					if(e.target.selectionStart == inputIn.value.length && e.key == "Enter") sendMessage()
+				})
+			})
+			socket.on("messageFromServer", (message) => {
+				console.log(message)
+				output.innerHTML += message
+				output.scrollTop = output.scrollHeight
+			})
+			function sendMessage(){
+				if(!(inputName.value == "" || inputIn.value == "") && inputIn.value.length < 1000 && inputName.value.length < 32 && inputIn.value.replace(" ", "") != 0 && inputName.value.replace(" ", "") != 0){
+					m = "<span class='uj'>&gt;</span> "+inputName.value+": "+inputIn.value+"<br>"
+					output.innerHTML += m
+					socket.emit("messageFromUser", m)
+					inputIn.value = ""
+					output.scrollTop = output.scrollHeight
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<style>
+			body{
+				background-color: black;
+			}
+			.uj{
+				color: rgb(255, 255, 255);
+			}
+			header{
+				border: black solid 1px;
+				width: 100px;
+				height: 100px;
+			}
+			#output{
+				height: 500px;
+				width: 100%;
+				overflow-y: scroll;
+				overflow-x: visible;
+				font-weight: bolder;
+				padding: 10px;
+				overflow-wrap: break-word;
+			}
+			#container{
+				margin: 0 auto;
+				border: 1px solid black;
+				width: 500px;
+				
+				border-radius: 20px;
+				background-color: rgb(152, 185, 247);
+			}
+			#top{
+				background-color: darkblue;
+				color: white;
+				text-align: center;
+				border-top-left-radius: 20px;
+				border-top-right-radius: 20px;
+				padding: 10px;
+			}
+			#foot{
+				background-color: darkblue;
+				color: darkblue;
+				text-align: center;
+				
+				border-bottom-left-radius: 20px;
+				border-bottom-right-radius: 20px;
+				padding: 10px;
+			}
+		</style>
+
+		<div id="container">
+			<div id="top">
+				Nev: <input id="inputName" type="text">
+			</div>
+			<div id="output"></div>
+			<div id="foot">
+				<input type="text" id="inputIn">
+				<input type="button" id="inputSend" value="Kuldes">
+			</div>
+		</div>
+	</body>
+</html>
